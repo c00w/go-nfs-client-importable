@@ -515,8 +515,12 @@ func (c *NfsClient) GetFileInfo(path string) (FileInfo, error) {
 	}
 
 	splits := splitPath(path)
+	fname := ""
+	if len(splits) != 0 {
+		fname = splits[len(splits)-1]
+	}
 
-	resInfo := c.translateFileMeta(splits[len(splits)-1],
+	resInfo := c.translateFileMeta(fname,
 		res[len(res)-1].Opgetattr().Resok4().Obj_attributes)
 	return resInfo, nil
 }
