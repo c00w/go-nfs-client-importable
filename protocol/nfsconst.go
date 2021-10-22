@@ -1,4 +1,4 @@
-package internal
+package protocol
 
 /*
 const OPEN4_SHARE_ACCESS_READ = 0x00000001

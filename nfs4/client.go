@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	. "github.com/Cyberax/go-nfs-client/internal"
+	. "github.com/Cyberax/go-nfs-client/protocol"
 )
 
 const NfsReadBlockLen = 512 * 1024

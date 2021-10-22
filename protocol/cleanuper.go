@@ -1,4 +1,4 @@
-package internal
+package protocol
 
 type cleanuper struct {
 	cleanupErr func() error
@@ -27,4 +27,3 @@ func (c *cleanuper) Cleanup() {
 		c.cleanup()
 	}
 }
-

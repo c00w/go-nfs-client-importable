@@ -1,8 +1,9 @@
-package internal
+package protocol
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCleanup(t *testing.T) {
