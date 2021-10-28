@@ -818,7 +818,7 @@ func (c *NfsClient) MakePath(path string) error {
 				var dirAttrs Fattr4
 				dirAttrs.Attr_vals = make([]byte, 4)
 				binary.BigEndian.PutUint32(dirAttrs.Attr_vals,
-					MODE4_WUSR|MODE4_RUSR|MODE4_XUSR|MODE4_WGRP|MODE4_RGRP|MODE4_XGRP)
+					MODE4_WUSR|MODE4_RUSR|MODE4_XUSR|MODE4_RGRP|MODE4_XGRP|MODE4_ROTH|MODE4_XOTH) // drwxr-xr-x seems more reasonable
 				dirAttrs.Attrmask = Bitmap4{0, 1 << (FATTR4_MODE - 32)}
 
 				args = append(args,
