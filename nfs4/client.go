@@ -555,7 +555,7 @@ func (c *NfsClient) ReadFile(path string, offset, count uint64, writer io.Writer
 	for {
 		_, err := writer.Write(flDataBlock.Data)
 		if err != nil {
-			return 0, err
+			return dataRead, err
 		}
 		ln := len(flDataBlock.Data)
 		offset += uint64(ln)
@@ -581,7 +581,7 @@ func (c *NfsClient) ReadFile(path string, offset, count uint64, writer io.Writer
 			},
 		}, path)
 		if err != nil {
-			return 0, err
+			return dataRead, err
 		}
 		flDataBlock = res[1].Opread().Resok4()
 	}
