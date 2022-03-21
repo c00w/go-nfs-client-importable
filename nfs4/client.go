@@ -17,12 +17,15 @@ import (
 	. "github.com/Cyberax/go-nfs-client/protocol"
 )
 
-const NfsReadBlockLen = 512 * 1024
+const NfsReadBlockLen = 1024 * 1024
 
 var standardNfsAttrs = Bitmap4{
 	1<<FATTR4_TYPE | 1<<FATTR4_SIZE,
 	1 << (FATTR4_TIME_MODIFY - 32),
 }
+
+// Default to "drwxr-xr-x"
+const DefaultDirMode = MODE4_RUSR|MODE4_WUSR|MODE4_XUSR|MODE4_RGRP|MODE4_XGRP|MODE4_ROTH|MODE4_XOTH
 
 type NfsInterface interface {
 	Ping() error
@@ -37,7 +40,7 @@ type NfsInterface interface {
 	WriteFile(path string, truncate bool, offset uint64, reader io.Reader) (written uint64, err error)
 
 	DeleteFile(path string) error
-	MakePath(path string) error
+	MakePath(path string, mode uint32) error
 }
 type NfsClient struct {
 	conn net.Conn
@@ -787,7 +790,7 @@ func (c *NfsClient) DeleteFile(path string) error {
 	return nil
 }
 
-func (c *NfsClient) MakePath(path string) error {
+func (c *NfsClient) MakePath(path string, mode uint32) error {
 	curPath := ""
 	var curPathElems []string
 
@@ -817,8 +820,7 @@ func (c *NfsClient) MakePath(path string) error {
 				// Set the file mode (Unix access mask)
 				var dirAttrs Fattr4
 				dirAttrs.Attr_vals = make([]byte, 4)
-				binary.BigEndian.PutUint32(dirAttrs.Attr_vals,
-					MODE4_WUSR|MODE4_RUSR|MODE4_XUSR|MODE4_RGRP|MODE4_XGRP|MODE4_ROTH|MODE4_XOTH) // drwxr-xr-x seems more reasonable
+				binary.BigEndian.PutUint32(dirAttrs.Attr_vals, mode)
 				dirAttrs.Attrmask = Bitmap4{0, 1 << (FATTR4_MODE - 32)}
 
 				args = append(args,
