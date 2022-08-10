@@ -24,7 +24,7 @@ const (
 )
 
 var standardNfsAttrs = Bitmap4{
-    1<<FATTR4_TYPE | 1<<FATTR4_SIZE,
+    1<<FATTR4_TYPE | 1<<FATTR4_SIZE | 1<<FATTR4_FILEID,
     1 << (FATTR4_TIME_MODIFY - 32),
 }
 
@@ -75,6 +75,7 @@ type FileInfo struct {
     IsDir bool
     Type  Nfs_ftype4
     Size  uint64
+    Inode uint64
     Mtime time.Time
 }
 
@@ -510,6 +511,11 @@ func (c *NfsClient) translateFileMeta(name string, attrs Fattr4) FileInfo {
 
     if len(atm) > 0 && atm[0]&(1<<FATTR4_SIZE) != 0 {
         res.Size = binary.BigEndian.Uint64(attrs.Attr_vals[curOff : curOff+8])
+        curOff += 8
+    }
+
+    if len(atm) > 0 && atm[0]&(1<<FATTR4_FILEID) != 0 {
+        res.Inode = binary.BigEndian.Uint64(attrs.Attr_vals[curOff : curOff+8])
         curOff += 8
     }
 
