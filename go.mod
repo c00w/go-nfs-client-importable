@@ -1,4 +1,4 @@
-module github.com/polyrabbit/go-nfs-client
+module github.com/c00w/go-nfs-client-importable
 
 go 1.15
 
